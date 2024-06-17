@@ -41,45 +41,15 @@
 
 // 3) დავწეროთ ფუნქცია რომელიც ეცდება წმოიღოს მონაცემები https://dummyjson.com/users დან და https://jsonplaceholder.typicode.com/users დან.
 // ფუნქციამ უნდა დაგვიბრუნოს ის ლისთი რომელის ჩატვირთვაც უფრო მალე მოხდება.
-function fetchWithTimeout(url, timeout) {
-    return new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-            reject(new Error("error"));
-        }, timeout);
-
-        fetch(url)
-            .then(response => {
-                clearTimeout(timer);
-                if (!response.ok) {
-                    reject(new Error("error"));
-                } else {
-                    return response.json();
-                }
-            })
-            .then(data => resolve(data))
-            .catch(error => {
-                clearTimeout(timer);
-                reject(error);
-            });
-    });
-}
-
-async function fetchFasterUserList() {
-    const fetchPromises = [
-        fetchWithTimeout("https://dummyjson.com/users", 3000),
-        fetchWithTimeout("https://jsonplaceholder.typicode.com/users", 5000)
-    ];
-
-    try {
-        const fasterData = await Promise.race(fetchPromises);
-        console.log(fasterData);
-        return fasterData;
-    } catch (error) {
-        console.error("error");
-    }
-}
-
-fetchFasterUserList();
+async function race(){
+    const firstplace =fetch("https://jsonplaceholder.typicode.com/users").then(
+        (res) => res.json()
+      );
+      const secondplace = fetch("https://dummyjson.com/users").then((res) => res.json());
+      return Promise.race([firstplace, secondplace])
+        .then((res) => console.log(res))
+        .catch((er) => console.log(er));}
+      race()
 
 
 // დედლაინი:  16/06/2024 23:59
