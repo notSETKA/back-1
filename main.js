@@ -46,9 +46,7 @@ async function race(){
         (res) => res.json()
       );
       const secondplace = fetch("https://dummyjson.com/users").then((res) => res.json());
-      return Promise.race([firstplace, secondplace])
-        .then((res) => console.log(res))
-        .catch((er) => console.log(er));}
+      return Promise.race([firstplace, secondplace]).then((res) => console.log(res)).catch((er) => console.log(er));}
       race()
 
 
